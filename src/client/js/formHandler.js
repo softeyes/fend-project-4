@@ -5,7 +5,7 @@ function handleSubmit(event) {
     fetch(`http://localhost:8081/test?name=${formText}`)
         .then(res => res.json())
         .then(function (res) {
-            document.getElementById('results').innerHTML = res.subjectivity;
+            document.getElementById('results').innerHTML = res.score_tag;
         })
 }
 export {

@@ -3,7 +3,6 @@ dotenv.config();
 
 var path = require('path')
 const express = require('express')
-const mockAPIResponse = require('./mockAPI.js')
 
 var axios = require("axios");
 
@@ -29,15 +28,8 @@ app.use(bodyParser.urlencoded({
 // Apply express to the dist folder
 app.use(express.static('dist'))
 
-console.log(JSON.stringify(mockAPIResponse))
-
 app.get('/', function (req, res) {
     res.sendFile('dist/index.html')
-})
-
-
-app.get('/test', function (req, res) {
-    res.json(mockAPIResponse);
 })
 
 // designates what port the app will listen to for incoming requests
@@ -45,14 +37,16 @@ app.listen(8081, function () {
     console.log('Example app listening on port 8081!')
 })
 
+// Setup empty JS object to act as endpoint for all routes
+let projectData = {};
+
 app.get("/test", function (req, res) {
-    let projectData = {};
     const name = req.query.name;
     axios.post(`https://api.meaningcloud.com/sentiment-2.1?key=${process.env.API_KEY}&of=json&txt=${name}&model=general&lang=en`, {})
         .then(function (response) {
             const result = response.data;
             projectData["sentence"] = name;
-            projectData["subjectivity"] = result.subjectivity;
+            projectData["subjectivity"] = result.score_tag;
             res.json(projectData);
             res.end();
         })
