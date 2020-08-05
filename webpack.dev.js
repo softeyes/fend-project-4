@@ -1,0 +1,43 @@
+const path = require('path') // The Path module provides a way of working with directories and file paths
+const webpack = require('webpack')
+const HtmlWebPackPlugin = require("html-webpack-plugin") // Includes webpack bundles in the body using script tags with dynamic referencing
+const {
+    CleanWebpackPlugin
+} = require('clean-webpack-plugin') // This plugin will remove all files inside webpack's output.path directory, as well as all unused webpack assets after every successful rebuild
+
+module.exports = {
+    entry: './src/client/index.js',
+    output: {
+        libraryTarget: 'var',
+        library: 'Client'
+    },
+    mode: 'development',
+    devtool: 'source-map',
+    module: {
+        rules: [{
+                test: '/\.js$/',
+                exclude: /node_modules/,
+                loader: "babel-loader"
+            },
+            {
+                test: /\.scss$/,
+                use: ['style-loader', 'css-loader', 'sass-loader']
+            }
+        ]
+    },
+    plugins: [
+        new HtmlWebPackPlugin({
+            template: "./src/client/views/index.html",
+            filename: "./index.html",
+        }),
+        new CleanWebpackPlugin({
+            // Simulate the removal of files
+            dry: true,
+            // Write Logs to Console
+            verbose: true,
+            // Automatically remove all unused webpack assets on rebuild
+            cleanStaleWebpackAssets: true,
+            protectWebpackAssets: false
+        })
+    ]
+}
