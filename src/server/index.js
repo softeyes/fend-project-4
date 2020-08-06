@@ -40,14 +40,15 @@ app.listen(8081, function () {
 // Setup empty JS object to act as endpoint for all routes
 let projectData = {};
 
+// GET ROUTE - return the projectData object in the server code
 app.get("/test", function (req, res) {
     const name = req.query.name;
     axios.post(`https://api.meaningcloud.com/sentiment-2.1?key=${process.env.API_KEY}&of=json&txt=${name}&model=general&lang=en`, {})
         .then(function (response) {
             const result = response.data;
             projectData["sentence"] = name;
-            projectData["subjectivity"] = result.score_tag;
-            res.json(projectData);
+            projectData["subjectivity"] = result.subjectivity;
+            res.send(projectData);
             res.end();
         })
         .catch(function (error) {
